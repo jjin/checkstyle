@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="ci" default="ci" basedir=".">
+
+	<echo message="Pull in the configutations file.">
+	</echo>
+	<property file="${basedir}/ant_ci_configurations.properties" />
+	<taskdef resource="checkstyletask.properties" classpath="${project.ci.support.checkstyle}/checkstyle-all.jar" />
+
+	<fileset id="src.java" dir="${project.build.src.dir}" includes="**/*.java" />
+
+
+	<target name="ci">
+
+
+	</target>
+
+
+	<target name="checkstyle">
+		<delete dir="${project.ci.checkstyle.dest.dir}" />
+		<mkdir dir="${project.ci.checkstyle.dest.dir}" />
+
+
+		<checkstyle config="${project.ci.support.configurations}/checkstyle.xml" failonviolation="false" failureproperty="checkstyle.failure">
+			<fileset refid="src.java" />
+			<formatter type="xml" tofile="${project.ci.checkstyle.dest.dir}/checkstyle.xml" />
+		</checkstyle>
+
+		<xslt style="${project.ci.support.configurations}/checkstyle.xsl" in="${project.ci.checkstyle.dest.dir}/checkstyle.xml" out="${project.ci.checkstyle.dest.dir}/report.html">
+			<outputproperty name="encoding" value="UTF-8" />
+		</xslt>
+	</target>
+</project>
